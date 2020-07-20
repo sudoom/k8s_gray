@@ -29,3 +29,6 @@ Privacy information can be found at https://privacy.microsoft.com/en-us/
 
 Microsoft and any contributors reserve all other rights, whether under their respective copyrights, patents,
 or trademarks, whether by implication, estoppel or otherwise.
+
+
+You should deploy kubernetes cluster using azure DevOps. Deploy 2 instances of application to it(webbapp_dev, webapp_stage). Deploy graylog. Web apps and graylog should be deployed to separate node pools and use namespaces created specifically fo them. Applications should send messages to GELF HTTP Graylog input protected by TLS.
