@@ -1,0 +1,94 @@
+trigger:
+- 'kubeline'
+
+variables:
+  buildConfiguration: 'Release'
+  webRepository: 'web'
+  leaderboardRepository: 'leaderboard'
+  tag: '$(Build.BuildId)'
+  imagePullSecret: 'secret'
+
+stages:
+- stage: 'Build'
+  displayName: 'Build and push'
+  jobs:  
+  - job: 'Build'
+    displayName: 'Build job'
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - task: Docker@2
+      displayName: 'Build and push web image to container registry'
+      inputs:
+        command: buildAndPush
+        buildContext: $(Build.Repository.LocalPath)
+        repository: $(webRepository)
+        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
+        containerRegistry: 'mossad-acr-connection'
+        tags: |
+          $(tag)
+
+    - task: Docker@2
+      displayName: 'Build and push leaderboard image to container registry'
+      inputs:
+        command: buildAndPush
+        buildContext: $(Build.Repository.LocalPath)
+        repository: $(leaderboardRepository)
+        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
+        containerRegistry: 'mossad-acr-connection'
+        tags: |
+          $(tag)
+
+    - publish: '$(Build.SourcesDirectory)/manifests'
+      artifact: manifests
+
+- stage: 'Deploy'
+  displayName: 'Deploy the container'
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy job'
+    pool:
+      vmImage: 'ubuntu-18.04'
+    environment: 'spike.default'
+    variables:
+    - group: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: manifests
+          - task: KubernetesManifest@0
+            displayName: create imagePullSecret
+            inputs:
+              action: createSecret
+              secretName: $(imagePullSecret)
+              dockerRegistryEndpoint: 'mossad-acr-connection'
+              kubernetesServiceConnection: 'mossad-kube-connection'
+              namespace: 'default'
+              
+          - task: KubernetesManifest@0
+            displayName: Deploy to k8s cluster
+            inputs:
+              action: deploy
+              kubernetesServiceConnection: 'mossad-kube-connection'
+              namespace: 'default'
+              manifests: |
+                $(Pipeline.Workspace)/manifests/deployment.yml
+                $(Pipeline.Workspace)/manifests/service.yml
+              imagePullSecrets: |
+                $(imagePullSecret)
+              containers: |
+                $(RegistryName)/$(webRepository):$(tag)
+                $(RegistryName)/$(leaderboardRepository):$(tag)
+
+
+
+
+    # steps:
+    # - task: AzureWebAppContainer@1
+    #   inputs:
+    #    appName: $(WebAppName)
+    #    azureSubscription: 'Resource Manager - Tailspin - Space Game'
+    #    imageName: $(RegistryName)/$(webRepository):$(build.buildId)
