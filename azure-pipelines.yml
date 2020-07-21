@@ -1,5 +1,5 @@
 trigger:
-- 'kubeline'
+- '*'
 
 variables:
   buildConfiguration: 'Release'
