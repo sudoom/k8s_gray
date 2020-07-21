@@ -1,12 +1,12 @@
 
-# az acr create \
-# --name mossadrg \
-# --resource-group testpipe \
-# --sku Standard \
-# && \
+az acr create \
+--name mossadrg \
+--resource-group test \
+--sku Standard \
+&& \
 az aks create \
 --name mossadcluster \
---resource-group testpipe \
+--resource-group test \
 --enable-addons monitoring \
 --kubernetes-version 1.15.11 \
 --generate-ssh-keys \
@@ -14,13 +14,13 @@ az aks create \
 && \
 clientId=$(az aks show \
 --name mossadcluster \
---resource-group testpipe \
+--resource-group test \
 --query "servicePrincipalProfile.clientId" \
 --output tsv) \
 && \
 acrId=$(az acr show \
 --name mossadrg \
---resource-group testpipe \
+--resource-group test \
 --query "id" \
 --output tsv)\
 && \
