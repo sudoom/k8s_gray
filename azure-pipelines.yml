@@ -2,45 +2,58 @@ trigger:
 - '*'
 
 variables:
-  buildConfiguration: 'Release'
-  webRepository: 'web'
-  leaderboardRepository: 'leaderboard'
-  tag: '$(Build.BuildId)'
-  imagePullSecret: 'secret'
+- group: Release
 
 stages:
 - stage: 'Build'
   displayName: 'Build and push'
   jobs:  
-  - job: 'Build'
-    displayName: 'Build job'
+  - job: 'Create'
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
-    - task: Docker@2
-      displayName: 'Build and push web image to container registry'
-      inputs:
-        command: buildAndPush
-        buildContext: $(Build.Repository.LocalPath)
-        repository: $(webRepository)
-        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
-        containerRegistry: 'test-cr-connection'
-        tags: |
-          $(tag)
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Create resources'
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'test-connection'
+          subscriptionId: '$(subscriptionId)'
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: 'test'
+          location: 'East US'
+          templateLocation: 'Linked artifact'
+          csmFile: 'create.json'
+          deploymentMode: 'Incremental'
 
-    - task: Docker@2
-      displayName: 'Build and push leaderboard image to container registry'
-      inputs:
-        command: buildAndPush
-        buildContext: $(Build.Repository.LocalPath)
-        repository: $(leaderboardRepository)
-        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
-        containerRegistry: 'test-cr-connection'
-        tags: |
-          $(tag)
+  # - job: 'Build'
+  #   displayName: 'Build job'
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #   - task: Docker@2
+  #     displayName: 'Build and push web image to container registry'
+  #     inputs:
+  #       command: buildAndPush
+  #       buildContext: $(Build.Repository.LocalPath)
+  #       repository: $(webRepository)
+  #       dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
+  #       containerRegistry: 'test-cr-connection'
+  #       tags: |
+  #         $(tag)
 
-    - publish: '$(Build.SourcesDirectory)/manifests'
-      artifact: manifests
+  #   - task: Docker@2
+  #     displayName: 'Build and push leaderboard image to container registry'
+  #     inputs:
+  #       command: buildAndPush
+  #       buildContext: $(Build.Repository.LocalPath)
+  #       repository: $(leaderboardRepository)
+  #       dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
+  #       containerRegistry: 'test-cr-connection'
+  #       tags: |
+  #         $(tag)
+
+  #   - publish: '$(Build.SourcesDirectory)/manifests'
+  #     artifact: manifests
 
 # - stage: 'Deploy'
 #   displayName: 'Deploy the container'
