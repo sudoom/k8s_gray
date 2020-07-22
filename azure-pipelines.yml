@@ -23,6 +23,7 @@ stages:
           location: 'East US'
           templateLocation: 'Linked artifact'
           csmFile: 'create.json'
+          overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
           deploymentMode: 'Incremental'
 
   # - job: 'Build'

@@ -22,12 +22,15 @@
             "defaultValue": "[resourceGroup().location]"
 
         },
-        "k8sNames": {
-            "type": "array",
-            "defaultValue": [
-                "webbapp_dev_",
-                "webapp_stage_"
-            ]
+        "k8sName": {
+            "type": "string",
+            "defaultValue": "[concat('webbapp_dev_', uniqueString(resourceGroup().id))]"
+        },
+        "clientId": {
+            "type": "string"
+        },
+        "clientSecret": {
+            "type": "securestring"
         }
     },
     "variables": {},
@@ -45,7 +48,7 @@
             }
         },
         {
-            "name": "[concat(parameters('k8sNames')[copyIndex()], uniqueString(resourceGroup().id))]",
+            "name": "[parameters('k8sName')]",
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-02-01",
             "location": "[parameters('location')]",
@@ -55,37 +58,23 @@
                 "agentPoolProfiles": [
                     {
                         "name": "app",
-                        "count": 1,
-                        "vmSize": "Standard_DS1_v2",
+                        "count": 2,
+                        "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
                     },
                     {
                         "name": "graylog",
-                        "count": 1,
-                        "vmSize": "Standard_DS1_v2",
+                        "count": 2,
+                        "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
                     }
                 ],
-                // "linuxProfile": {
-                //     "adminUsername": "adminUserName",
-                //     "ssh": {
-                //         "publicKeys": [
-                //             {
-                //                 "keyData": "keyData"
-                //             }
-                //         ]
-                //     }
-                // },
                 "servicePrincipalProfile": {
-                    "clientId": "487e997c-6dd3-451f-9afe-8840af7a3b48",
-                    "secret": "2ijBxCBTY3tHHgkrdBf5u0SsDEDYoSBd~_"
+                    "clientId": "[parameters('clientId')]",
+                    "secret": "[parameters('clientSecret')]"
                 }
-            },
-            "copy": {
-                "name": "akscopy",
-                "count": "[length(parameters('k8sNames'))]"
             }
         }
     ]
