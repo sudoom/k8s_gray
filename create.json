@@ -4,7 +4,7 @@
     "parameters": {
         "acrName": {
             "type": "string",
-            "defaultValue": "[concat('acr_', uniqueString(resourceGroup().id))]"
+            "defaultValue": "[concat('acr', uniqueString(resourceGroup().id))]"
         },
         "acrSku": {
             "type": "string",
@@ -54,7 +54,14 @@
                 "dnsPrefix": "mossadclusters",
                 "agentPoolProfiles": [
                     {
-                        "name": "agentpool",
+                        "name": "app",
+                        "count": 1,
+                        "vmSize": "Standard_DS1_v2",
+                        "osType": "Linux",
+                        "storageProfile": "ManagedDisks"
+                    },
+                    {
+                        "name": "graylog",
                         "count": 1,
                         "vmSize": "Standard_DS1_v2",
                         "osType": "Linux",
