@@ -13,15 +13,17 @@ az aks create \
 --node-count 2 \
 && \
 clientId=$(az aks show \
---name mossadcluster \
+--name webbapp_dev_mmhddofogbaic \
 --resource-group test \
 --query "servicePrincipalProfile.clientId" \
---output tsv) \
+--output tsv) \  $clientId
+bash: 487e997c-6dd3-451f-9afe-8840af7a3b48: command not found
 && \
 acrId=$(az acr show \
---name mossadrg \
+--name acrmmhddofogbaic \
 --resource-group test \
---query "id" \
+--query "id" \    $acrId
+bash: /subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic: No such file or directory
 --output tsv)\
 && \
 az role assignment create --assignee $clientId --role acrpull --scope $acrId 

@@ -1,0 +1,110 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "acrName": {
+            "type": "string",
+            "defaultValue": "[concat('acr', uniqueString(resourceGroup().id))]"
+        },
+        "acrSku": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Classic",
+                "Basic",
+                "Standard",
+                "Premium"
+            ]
+
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+
+        },
+        "k8sNames": {
+            "type": "array",
+            "defaultValue": [
+                "webbapp_stage_",
+                "webbapp_dev_"
+            ]
+        },
+        "clientId": {
+            "type": "string"
+        },
+        "clientSecret": {
+            "type": "securestring"
+        },
+        "locations": {
+            "type": "array",
+            "defaultValue": [
+                "eastus",
+                "centralus"
+            ]
+        }
+    },
+    "variables": {
+        "AcrPull": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d')]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('acrName')]",
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2019-05-01",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('acrSku')]"
+            },
+            "properties": {
+                "adminUserEnabled": false
+            }
+        },
+        {
+            "name": "[concat(parameters('k8sNames')[copyIndex()], uniqueString(resourceGroup().id))]",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2020-02-01",
+            "location": "[parameters('locations')[copyIndex()]]",
+            "properties": {
+                "kubernetesVersion": "1.15.11",
+                "dnsPrefix": "mossadclusters",
+                "agentPoolProfiles": [
+                    {
+                        "name": "app",
+                        "count": 1,
+                        "vmSize": "Standard_DS2_v2",
+                        "osType": "Linux",
+                        "storageProfile": "ManagedDisks"
+                    },
+                    {
+                        "name": "graylog",
+                        "count": 1,
+                        "vmSize": "Standard_DS2_v2",
+                        "osType": "Linux",
+                        "storageProfile": "ManagedDisks"
+                    }
+                ],
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('clientId')]",
+                    "secret": "[parameters('clientSecret')]"
+                }
+            },
+            "copy": {
+                "name": "copy",
+                "count": "[length(parameters('locations'))]"
+            }
+        }
+        // ,
+        // {
+        //     "type": "Microsoft.Authorization/roleAssignments",
+        //     "apiVersion": "2017-09-01",
+        //     "name": "[guid(concat(resourceGroup().id, 'acrpull'))]",
+        //     "dependsOn": [
+        //         "[parameters('acrName')]"
+        //     ],
+        //     "properties": {
+        //         "roleDefinitionId": "[variables('AcrPull')]",
+        //         "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters', concat('webbapp_stage_', uniqueString(resourceGroup().id))), '2020-02-01','Full').properties.servicePrincipalProfile.clientId]"
+        //     }
+        // }
+    ]
+}
