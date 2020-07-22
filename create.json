@@ -4,7 +4,7 @@
     "parameters": {
         "acrName": {
             "type": "string",
-            "defaultValue": "test-cr-connection"
+            "defaultValue": "[concat('acr', uniqueString(resourceGroup().id))]"
         },
         "acrSku": {
             "type": "string",
