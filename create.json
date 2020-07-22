@@ -97,7 +97,7 @@
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2017-09-01",
-            "name": "[concat('webbapp_stage_', '/Microsoft.Authorization/', guid(uniqueString('webbapp_stage_')))]",
+            "name": "[guid(concat(resourceGroup().id, 'acrpull'))]",
             "dependsOn": [
                 "[parameters('acrName')]"
             ],
