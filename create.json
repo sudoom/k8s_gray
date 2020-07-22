@@ -22,15 +22,25 @@
             "defaultValue": "[resourceGroup().location]"
 
         },
-        "k8sName": {
-            "type": "string",
-            "defaultValue": "[concat('webbapp_dev_', uniqueString(resourceGroup().id))]"
+        "k8sNames": {
+            "type": "array",
+            "defaultValue": [
+                "webbapp_stage_",
+                "webbapp_dev_"
+            ]
         },
         "clientId": {
             "type": "string"
         },
         "clientSecret": {
             "type": "securestring"
+        },
+        "locations": {
+            "type": "array",
+            "defaultValue": [
+                "eastus",
+                "centralus"
+            ]
         }
     },
     "variables": {},
@@ -48,24 +58,24 @@
             }
         },
         {
-            "name": "[parameters('k8sName')]",
+            "name": "[concat(parameters('k8sNames')[copyIndex()], uniqueString(resourceGroup().id))]",
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-02-01",
-            "location": "[parameters('location')]",
+            "location": "[parameters('locations')[copyIndex()]]",
             "properties": {
                 "kubernetesVersion": "1.15.11",
                 "dnsPrefix": "mossadclusters",
                 "agentPoolProfiles": [
                     {
                         "name": "app",
-                        "count": 2,
+                        "count": 1,
                         "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
                     },
                     {
                         "name": "graylog",
-                        "count": 2,
+                        "count": 1,
                         "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
@@ -75,6 +85,10 @@
                     "clientId": "[parameters('clientId')]",
                     "secret": "[parameters('clientSecret')]"
                 }
+            },
+            "copy": {
+                "name": "copy",
+                "count": "[length(parameters('locations'))]"
             }
         }
     ]
