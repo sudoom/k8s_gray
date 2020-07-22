@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: mossadrg.azurecr.io/web
+          image: acrmmhddofogbaic.azurecr.io/web
           ports:
           - containerPort: 80
 ---
@@ -34,6 +34,6 @@ spec:
     spec:
       containers:
         - name: leaderboard
-          image: mossadrg.azurecr.io/leaderboard
+          image: acrmmhddofogbaic.azurecr.io/leaderboard
           ports:
           - containerPort: 80

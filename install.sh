@@ -12,18 +12,20 @@ az aks create \
 --generate-ssh-keys \
 --node-count 2 \
 && \
-clientId=$(az aks show \
---name webbapp_dev_mmhddofogbaic \
+clientId1=$(az aks show \
+--name webbapp_stage_mmhddofogbaic \
 --resource-group test \
 --query "servicePrincipalProfile.clientId" \
---output tsv) \  $clientId
-bash: 487e997c-6dd3-451f-9afe-8840af7a3b48: command not found
+--output tsv) \  
+# $clientId
+# bash: 487e997c-6dd3-451f-9afe-8840af7a3b48: command not found
 && \
 acrId=$(az acr show \
 --name acrmmhddofogbaic \
 --resource-group test \
---query "id" \    $acrId
-bash: /subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic: No such file or directory
---output tsv)\
+--query "id" \    
+--output tsv)
 && \
-az role assignment create --assignee $clientId --role acrpull --scope $acrId 
+# $acrId
+# bash: /subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic: No such file or directory
+az role assignment create --assignee $clientId1 --role acrpull --scope $acrId 
