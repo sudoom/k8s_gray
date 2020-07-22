@@ -51,7 +51,7 @@
             "location": "[parameters('location')]",
             "properties": {
                 "kubernetesVersion": "1.15.11",
-
+                "dnsPrefix": "mossadclusters",
                 "agentPoolProfiles": [
                     {
                         "name": "agentpool",
