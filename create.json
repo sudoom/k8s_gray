@@ -93,24 +93,18 @@
                 "count": "[length(parameters('locations'))]"
             }
         }
-        ,
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2017-09-01",
-            "name": "[guid(concat(resourceGroup().id, 'acrpull'))]",
-            "dependsOn": [
-                "[parameters('acrName')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('AcrPull')]",
-                "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters', concat('webbapp_stage_', uniqueString(resourceGroup().id))), '2020-02-01','Full').properties.servicePrincipalProfile.clientId]"
-            }
-        }
-    ],
-    "outputs": {
-             "fullReferenceOutput": {
-        "type": "object",
-        "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', concat('webbapp_stage_', uniqueString(resourceGroup().id))), '2020-02-01','Full')]"
-      }
-    }
+        // ,
+        // {
+        //     "type": "Microsoft.Authorization/roleAssignments",
+        //     "apiVersion": "2017-09-01",
+        //     "name": "[guid(concat(resourceGroup().id, 'acrpull'))]",
+        //     "dependsOn": [
+        //         "[parameters('acrName')]"
+        //     ],
+        //     "properties": {
+        //         "roleDefinitionId": "[variables('AcrPull')]",
+        //         "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters', concat('webbapp_stage_', uniqueString(resourceGroup().id))), '2020-02-01','Full').properties.servicePrincipalProfile.clientId]"
+        //     }
+        // }
+    ]
 }
