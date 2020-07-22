@@ -93,19 +93,19 @@
                 "count": "[length(parameters('locations'))]"
             }
         }
-        // ,
-        // {
-        //     "type": "Microsoft.Authorization/roleAssignments",
-        //     "apiVersion": "2017-09-01",
-        //     "name": "[concat('webbapp_stage_', '/Microsoft.Authorization/', guid(uniqueString('webbapp_stage_')))]",
-        //     "dependsOn": [
-        //         "[parameters('acrName')]"
-        //     ],
-        //     "properties": {
-        //         "roleDefinitionId": "[variables('AcrPull')]",
-        //         "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters', concat('webbapp_stage_', uniqueString(resourceGroup().id))), '2020-02-01','Full').identity.clientId]"
-        //     }
-        // }
+        ,
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2017-09-01",
+            "name": "[concat('webbapp_stage_', '/Microsoft.Authorization/', guid(uniqueString('webbapp_stage_')))]",
+            "dependsOn": [
+                "[parameters('acrName')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('AcrPull')]",
+                "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters', concat('webbapp_stage_', uniqueString(resourceGroup().id))), '2020-02-01','Full').properties.servicePrincipalProfile.clientId]"
+            }
+        }
     ],
     "outputs": {
              "fullReferenceOutput": {
