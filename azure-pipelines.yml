@@ -15,13 +15,15 @@ stages:
       - task: DockerCompose@0
         displayName: 'Create compose graylog'
         inputs:
-          action: Push services
+          action: Run services
           azureSubscription: 'test-connection'
           azureContainerRegistry: '{"loginServer":"acrmmhddofogbaic.azurecr.io", "id" : "/subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic"}'
           dockerComposeFile: '$(Build.SourcesDirectory)/graylog/docker-compose.yml'
           projectName: 'graylog'
           qualifyImageNames: true
-          additionalImageTags: $(tag)
+          buildImages: true
+          abortOnContainerExit: true
+          detached: false
   # - job: 'Create'
   #   pool:
   #     vmImage: 'ubuntu-18.04'
