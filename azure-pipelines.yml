@@ -8,53 +8,67 @@ stages:
 - stage: 'Build'
   displayName: 'Build and push'
   jobs:  
-  - job: 'Create'
+  - job: "Build"
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        displayName: 'Create resources'
+      - task: DockerCompose@0
+        displayName: 'Create compose graylog'
         inputs:
-          deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'test-connection'
-          subscriptionId: '$(subscriptionId)'
-          action: 'Create Or Update Resource Group'
-          resourceGroupName: 'test'
-          location: 'East US'
-          templateLocation: 'Linked artifact'
-          csmFile: 'create.json'
-          overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
-          deploymentMode: 'Incremental'
+          action: Build services
+          azureSubscription: 'test-connection'
+          azureContainerRegistry: '{"loginServer":"acrmmhddofogbaic.azurecr.io", "id" : "/subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic"}'
+          dockerComposeFile: '$(Build.SourcesDirectory)/graylog/docker-compose.yml'
+          projectName: $(Build.Repository.Name)
+          qualifyImageNames: true
+          additionalImageTags: $(tag)
+  # - job: 'Create'
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #     - task: AzureResourceManagerTemplateDeployment@3
+  #       displayName: 'Create resources'
+  #       inputs:
+  #         deploymentScope: 'Resource Group'
+  #         azureResourceManagerConnection: 'test-connection'
+  #         subscriptionId: '$(subscriptionId)'
+  #         action: 'Create Or Update Resource Group'
+  #         resourceGroupName: 'test'
+  #         location: 'East US'
+  #         templateLocation: 'Linked artifact'
+  #         csmFile: 'create.json'
+  #         overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
+  #         deploymentMode: 'Incremental'
 
-  - job: 'Build'
-    displayName: 'Build job'
-    pool:
-      vmImage: 'ubuntu-18.04'
-    steps:
-    - task: Docker@2
-      displayName: 'Build and push web image to container registry'
-      inputs:
-        command: buildAndPush
-        buildContext: $(Build.Repository.LocalPath)
-        repository: $(webRepository)
-        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
-        containerRegistry: 'acr-connection'
-        tags: |
-          $(tag)
+  # - job: 'Build'
+  #   displayName: 'Build job'
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #   - task: Docker@2
+  #     displayName: 'Build and push web image to container registry'
+  #     inputs:
+  #       command: buildAndPush
+  #       buildContext: $(Build.Repository.LocalPath)
+  #       repository: $(webRepository)
+  #       dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
+  #       containerRegistry: 'acr-connection'
+  #       tags: |
+  #         $(tag)
 
-    - task: Docker@2
-      displayName: 'Build and push leaderboard image to container registry'
-      inputs:
-        command: buildAndPush
-        buildContext: $(Build.Repository.LocalPath)
-        repository: $(leaderboardRepository)
-        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
-        containerRegistry: 'acr-connection'
-        tags: |
-          $(tag)
+  #   - task: Docker@2
+  #     displayName: 'Build and push leaderboard image to container registry'
+  #     inputs:
+  #       command: buildAndPush
+  #       buildContext: $(Build.Repository.LocalPath)
+  #       repository: $(leaderboardRepository)
+  #       dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
+  #       containerRegistry: 'acr-connection'
+  #       tags: |
+  #         $(tag)
 
-    - publish: '$(Build.SourcesDirectory)/manifests'
-      artifact: manifests
+  #   - publish: '$(Build.SourcesDirectory)/manifests'
+  #     artifact: manifests
 
 # - stage: 'Deploy'
 #   displayName: 'Deploy the container'
