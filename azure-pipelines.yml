@@ -19,7 +19,7 @@ stages:
           azureSubscription: 'test-connection'
           azureContainerRegistry: '{"loginServer":"acrmmhddofogbaic.azurecr.io", "id" : "/subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic"}'
           dockerComposeFile: '$(Build.SourcesDirectory)/graylog/docker-compose.yml'
-          projectName: $(Build.Repository.Name)
+          projectName: 'graylog'
           qualifyImageNames: true
           additionalImageTags: $(tag)
   # - job: 'Create'
