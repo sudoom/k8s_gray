@@ -12,18 +12,34 @@ stages:
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
-      - task: DockerCompose@0
-        displayName: 'Create compose graylog'
+      - task: KubernetesManifest@0
+        displayName: Deploy to k8s cluster
         inputs:
-          action: Run services
-          azureSubscription: 'test-connection'
-          azureContainerRegistry: '{"loginServer":"acrmmhddofogbaic.azurecr.io", "id" : "/subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic"}'
-          dockerComposeFile: '$(Build.SourcesDirectory)/graylog/docker-compose.yml'
-          projectName: 'graylog'
-          qualifyImageNames: true
-          buildImages: true
-          abortOnContainerExit: true
-          detached: false
+          action: deploy
+          kubernetesServiceConnection: 'mossad-kube-connection'
+          namespace: 'default'
+          manifests: |
+            $(Pipeline.Workspace)/manifests/elastic-deploy.yml
+            $(Pipeline.Workspace)/manifests/mongo-deploy.yml
+            $(Pipeline.Workspace)/manifests/graylog-deploy.yml
+
+          # imagePullSecrets: |
+          #   $(imagePullSecret)
+          # containers: |
+          #   $(RegistryName)/$(webRepository):$(tag)
+          #   $(RegistryName)/$(leaderboardRepository):$(tag)
+          # - task: DockerCompose@0
+      #   displayName: 'Create compose graylog'
+      #   inputs:
+      #     action: Run services
+      #     azureSubscription: 'test-connection'
+      #     azureContainerRegistry: '{"loginServer":"acrmmhddofogbaic.azurecr.io", "id" : "/subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic"}'
+      #     dockerComposeFile: '$(Build.SourcesDirectory)/graylog/docker-compose.yml'
+      #     projectName: 'graylog'
+      #     qualifyImageNames: true
+      #     buildImages: true
+      #     abortOnContainerExit: true
+      #     detached: false
   # - job: 'Create'
   #   pool:
   #     vmImage: 'ubuntu-18.04'

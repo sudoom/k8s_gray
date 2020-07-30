@@ -13,7 +13,7 @@ az aks create \
 --node-count 2 \
 && \
 clientId1=$(az aks show \
---name webbapp_stage_mmhddofogbaic \
+--name mossadcluster \
 --resource-group test \
 --query "servicePrincipalProfile.clientId" \
 --output tsv) \  
@@ -21,7 +21,7 @@ clientId1=$(az aks show \
 # bash: 487e997c-6dd3-451f-9afe-8840af7a3b48: command not found
 && \
 acrId=$(az acr show \
---name acrmmhddofogbaic \
+--name mossadrg \
 --resource-group test \
 --query "id" \    
 --output tsv)
