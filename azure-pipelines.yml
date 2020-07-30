@@ -12,6 +12,9 @@ stages:
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
+      - publish: '$(Build.SourcesDirectory)/manifests'
+        artifact: manifests
+      
       - task: KubernetesManifest@0
         displayName: Deploy to k8s cluster
         inputs:
