@@ -29,3 +29,7 @@ acrId=$(az acr show \
 # $acrId
 # bash: /subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/test/providers/Microsoft.ContainerRegistry/registries/acrmmhddofogbaic: No such file or directory
 az role assignment create --assignee $clientId1 --role acrpull --scope $acrId 
+az role assignment create \
+    --assignee $clientId1 \
+    --role "Network Contributor" \
+    --scope /subscriptions/b986656e-c238-4d08-bc76-efbfc9a46470/resourceGroups/MC_test_mossadcluster_eastus
