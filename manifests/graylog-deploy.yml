@@ -37,7 +37,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 30003 
+  - port: 9000
+    targetPort: 9000
+    nodePort: 30003
   selector:
       service: graylog-deploy
 
