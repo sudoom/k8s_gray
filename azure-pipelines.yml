@@ -25,7 +25,7 @@ stages:
   #         csmFile: 'create.json'
   #         overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
   #         deploymentMode: 'Incremental'
-    
+
   - job: 'Create_namespaces'
     pool:
       vmImage: 'ubuntu-18.04'
@@ -35,25 +35,25 @@ stages:
       inputs:            
         kubernetesServiceEndpoint: 'mossad-kube-connection'            
         command: create            
-        arguments: 'namespace graylog_stage'            
+        arguments: 'namespace graylog-stage'            
     - task: Kubernetes@1
       displayName: 'kubectl create'            
       inputs:            
         kubernetesServiceEndpoint: 'mossad-kube-connection'            
         command: create            
-        arguments: 'namespace webapp_stage'   
+        arguments: 'namespace webapp-stage'   
     - task: Kubernetes@1
       displayName: 'kubectl create'            
       inputs:            
         kubernetesServiceEndpoint: 'mossad-kube-connection'            
         command: create            
-        arguments: 'namespace graylog_dev'            
+        arguments: 'namespace graylog-dev'            
     - task: Kubernetes@1
       displayName: 'kubectl create'            
       inputs:            
         kubernetesServiceEndpoint: 'mossad-kube-connection'            
         command: create            
-        arguments: 'namespace webapp_dev' 
+        arguments: 'namespace webapp-dev' 
 
 
 
