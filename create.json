@@ -52,14 +52,14 @@
                 "agentPoolProfiles": [
                     {
                         "name": "webbapptage",
-                        "count": 2,
+                        "count": 1,
                         "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
                     },
                     {
                         "name": "webbappdev",
-                        "count": 2,
+                        "count": 1,
                         "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
