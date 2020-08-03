@@ -67,5 +67,8 @@ spec:
   - name: "two"
     port: 9000
     targetPort: 9000
+  - name: "one"
+    port: 12201
+    targetPort: 12201
   selector:
       service: graylog-deploy
