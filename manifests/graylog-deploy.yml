@@ -65,5 +65,7 @@ spec:
   type: LoadBalancer
   ports:
   - port: 30003
+    targetPort: 30003
+    nodePort: 30003
   selector:
       service: graylog-deploy
