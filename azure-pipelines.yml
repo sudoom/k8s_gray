@@ -6,8 +6,58 @@ variables:
 
 stages:
 - stage: 'Build'
-  displayName: 'Build and push'
+  displayName: 'Build Arm template'
   jobs:  
+  # - job: 'Create'
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #     - task: AzureResourceManagerTemplateDeployment@3
+  #       displayName: 'Create resources'
+  #       inputs:
+  #         deploymentScope: 'Resource Group'
+  #         azureResourceManagerConnection: 'test-connection'
+  #         subscriptionId: '$(subscriptionId)'
+  #         action: 'Create Or Update Resource Group'
+  #         resourceGroupName: 'test'
+  #         location: 'East US'
+  #         templateLocation: 'Linked artifact'
+  #         csmFile: 'create.json'
+  #         overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
+  #         deploymentMode: 'Incremental'
+    
+  - job: 'Create_namespaces'
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - task: Kubernetes@1
+      displayName: 'kubectl create'            
+      inputs:            
+        kubernetesServiceEndpoint: 'mossad-kube-connection'            
+        command: create            
+        arguments: 'namespace graylog_stage'            
+    - task: Kubernetes@1
+      displayName: 'kubectl create'            
+      inputs:            
+        kubernetesServiceEndpoint: 'mossad-kube-connection'            
+        command: create            
+        arguments: 'namespace webapp_stage'   
+    - task: Kubernetes@1
+      displayName: 'kubectl create'            
+      inputs:            
+        kubernetesServiceEndpoint: 'mossad-kube-connection'            
+        command: create            
+        arguments: 'namespace graylog_dev'            
+    - task: Kubernetes@1
+      displayName: 'kubectl create'            
+      inputs:            
+        kubernetesServiceEndpoint: 'mossad-kube-connection'            
+        command: create            
+        arguments: 'namespace webapp_dev' 
+
+
+
+
   # - job: "Build"
   #   pool:
   #     vmImage: 'ubuntu-18.04'
@@ -36,36 +86,9 @@ stages:
           # containers: |
           #   $(RegistryName)/$(webRepository):$(tag)
           #   $(RegistryName)/$(leaderboardRepository):$(tag)
-  # - job: 'Create'
-  #   pool:
-  #     vmImage: 'ubuntu-18.04'
-  #   steps:
-  #     - task: AzureResourceManagerTemplateDeployment@3
-  #       displayName: 'Create resources'
-  #       inputs:
-  #         deploymentScope: 'Resource Group'
-  #         azureResourceManagerConnection: 'test-connection'
-  #         subscriptionId: '$(subscriptionId)'
-  #         action: 'Create Or Update Resource Group'
-  #         resourceGroupName: 'test'
-  #         location: 'East US'
-  #         templateLocation: 'Linked artifact'
-  #         csmFile: 'create.json'
-  #         overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
-  #         deploymentMode: 'Incremental'
 
 
-  - job: 'Create_namespaces'
-    pool:
-      vmImage: 'ubuntu-18.04'
-    steps:
-    - task: Kubernetes@1
-      displayName: 'kubectl create'            
-      inputs:            
-        kubernetesServiceEndpoint: 'mossad-kube-connection'            
-        command: create            
-        arguments: 'namespace stage'            
-      
+
 
 
   # - job: 'Build'
