@@ -54,6 +54,20 @@ stages:
           overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
           deploymentMode: 'Incremental'
 
+
+  - job: 'Create_namespaces'
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - task: Kubernetes@1
+      displayName: 'kubectl create'            
+      inputs:            
+        kubernetesServiceEndpoint: 'mossad-kube-connection'            
+        command: create            
+        arguments: 'namespace stage'            
+      
+
+
   # - job: 'Build'
   #   displayName: 'Build job'
   #   pool:
