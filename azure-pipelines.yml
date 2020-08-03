@@ -36,23 +36,23 @@ stages:
           # containers: |
           #   $(RegistryName)/$(webRepository):$(tag)
           #   $(RegistryName)/$(leaderboardRepository):$(tag)
-  - job: 'Create'
-    pool:
-      vmImage: 'ubuntu-18.04'
-    steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        displayName: 'Create resources'
-        inputs:
-          deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'test-connection'
-          subscriptionId: '$(subscriptionId)'
-          action: 'Create Or Update Resource Group'
-          resourceGroupName: 'test'
-          location: 'East US'
-          templateLocation: 'Linked artifact'
-          csmFile: 'create.json'
-          overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
-          deploymentMode: 'Incremental'
+  # - job: 'Create'
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #     - task: AzureResourceManagerTemplateDeployment@3
+  #       displayName: 'Create resources'
+  #       inputs:
+  #         deploymentScope: 'Resource Group'
+  #         azureResourceManagerConnection: 'test-connection'
+  #         subscriptionId: '$(subscriptionId)'
+  #         action: 'Create Or Update Resource Group'
+  #         resourceGroupName: 'test'
+  #         location: 'East US'
+  #         templateLocation: 'Linked artifact'
+  #         csmFile: 'create.json'
+  #         overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
+  #         deploymentMode: 'Incremental'
 
 
   - job: 'Create_namespaces'
