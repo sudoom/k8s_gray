@@ -51,14 +51,14 @@
                 "dnsPrefix": "mossadclusters",
                 "agentPoolProfiles": [
                     {
-                        "name": "webbapptage",
+                        "name": "webapp",
                         "count": 1,
                         "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
                         "storageProfile": "ManagedDisks"
                     },
                     {
-                        "name": "webbappdev",
+                        "name": "graylog",
                         "count": 1,
                         "vmSize": "Standard_DS2_v2",
                         "osType": "Linux",
