@@ -66,6 +66,9 @@ spec:
   ports:
   - port: 30003
     targetPort: 30003
-    nodePort: 30003
+    nodePort: 32000
+  - port: 9000
+    targetPort: 9000
+    nodePort: 32001  
   selector:
       service: graylog-deploy
