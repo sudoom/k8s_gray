@@ -16,7 +16,7 @@ spec:
       - name: mongodb
         image: mongo:3
         ports:
-        - containerPort: 27018
+        - containerPort: 27017
       nodeSelector:
         agentpool: graylog 
 
@@ -30,6 +30,6 @@ spec:
   selector:
     service: mongo-deploy-stage
   ports:
-  - name: "27018"
-    port: 27018
-    targetPort: 27018    
+  - name: "27017"
+    port: 27017
+    targetPort: 27017    

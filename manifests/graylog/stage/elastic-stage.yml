@@ -33,12 +33,12 @@ spec:
         image: docker.elastic.co/elasticsearch/elasticsearch:6.7.2
         readinessProbe:
           tcpSocket:
-            port: 9201
+            port: 9200
           initialDelaySeconds: 20
           periodSeconds: 30
         ports:
-        - containerPort: 9201
-        - containerPort: 9301
+        - containerPort: 9200
+        - containerPort: 9300
       nodeSelector:
         agentpool: graylog
 ---
@@ -52,11 +52,11 @@ spec:
   selector:
     service: es-deploy-stage
   ports:
-  - name: "9201"
-    port: 9201
-    targetPort: 9201
+  - name: "9200"
+    port: 9200
+    targetPort: 9200
     nodePort: 30101
-  - name: "9301"
-    port: 9301
-    targetPort: 9301
+  - name: "9300"
+    port: 9300
+    targetPort: 9300
     nodePort: 30102
