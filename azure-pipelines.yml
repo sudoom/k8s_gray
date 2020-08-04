@@ -111,7 +111,7 @@ stages:
           namespace: 'graylog-dev'
           manifests: |
             $(Pipeline.Workspace)/manifests/graylog/dev/*.yml
-            # $(Pipeline.Workspace)/manifests/mongo-deploy.yml
+            $(Pipeline.Workspace)/manifests/graylog/stage/*.yml
             # $(Pipeline.Workspace)/manifests/graylog-deploy.yml
             # $(Pipeline.Workspace)/manifests/cronjob.yml
   #           # $(System.DefaultWorkingDirectory)/sudoom.k8s_gray/manifests/*.yml

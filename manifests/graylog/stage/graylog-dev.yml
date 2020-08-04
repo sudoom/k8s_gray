@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: graylog-deploy
+  name: graylog-deploy-stage
   labels:
-    service: graylog-deploy
-  namespace: graylog-dev
+    service: graylog-deploy-stage
+  namespace: graylog-stage
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        service: graylog-deploy
+        service: graylog-deploy-stage
     spec:
       containers:
       - name: graylog3
@@ -21,14 +21,14 @@ spec:
         - name: GRAYLOG_ROOT_PASSWORD_SHA2
           value: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
         - name: GRAYLOG_HTTP_EXTERNAL_URI
-          value: http://52.168.2.83:9000/
+          value: http://137.135.85.97:9001/
         - name: GRAYLOG_ELASTICSEARCH_HOSTS
-          value: http://es6:9200
+          value: http://es6-stage:9201
         - name: GRAYLOG_MONGODB_URI
-          value: mongodb://mongo:27017/graylog
+          value: mongodb://mongo-stage:27018/graylog
         ports:
-        - containerPort: 9000
-        - containerPort: 12201
+        - containerPort: 9001
+        - containerPort: 12202
       nodeSelector:
         agentpool: graylog
 
@@ -36,15 +36,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: lb
+  name: lb-stage
+  namespace: graylog-stage
 spec:
   type: LoadBalancer
   ports:
   - name: "two"
-    port: 9000
-    targetPort: 9000
+    port: 9001
+    targetPort: 9001
   - name: "one"
-    port: 12201
-    targetPort: 12201
+    port: 12202
+    targetPort: 12202
   selector:
-      service: graylog-deploy
+      service: graylog-deploy-stage
