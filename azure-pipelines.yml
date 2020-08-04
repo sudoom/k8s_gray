@@ -59,73 +59,99 @@ stages:
   #       command: create            
   #       arguments: 'namespace webapp-dev' 
 
-  # - job: 'Build'
-  #   displayName: 'Build job'
-  #   pool:
-  #     vmImage: 'ubuntu-18.04'
-  #   steps:
-  #   - task: Docker@2
-  #     displayName: 'Build and push web image to container registry'
-  #     inputs:
-  #       command: buildAndPush
-  #       buildContext: $(Build.Repository.LocalPath)
-  #       repository: $(webRepository)
-  #       dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
-  #       containerRegistry: 'acr-connection'
-  #       tags: |
-  #         $(tag)
-
-  #   - task: Docker@2
-  #     displayName: 'Build and push leaderboard image to container registry'
-  #     inputs:
-  #       command: buildAndPush
-  #       buildContext: $(Build.Repository.LocalPath)
-  #       repository: $(leaderboardRepository)
-  #       dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
-  #       containerRegistry: 'acr-connection'
-  #       tags: |
-  #         $(tag)
-
-  #   - publish: '$(Build.SourcesDirectory)/manifests'
-  #     artifact: manifests
-
-
-
-
-
-  - job: "Build"
+  - job: 'Build'
+    displayName: 'Build job'
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
-      - publish: '$(Build.SourcesDirectory)/manifests'
-        artifact: manifests
+    - task: Docker@2
+      displayName: 'Build and push web image to container registry'
+      inputs:
+        command: buildAndPush
+        buildContext: $(Build.Repository.LocalPath)
+        repository: $(webRepository)
+        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.Web/Dockerfile'
+        containerRegistry: 'acr-connection'
+        tags: |
+          $(tag)
 
-      - download: current
-        artifact: manifests
+    - task: Docker@2
+      displayName: 'Build and push leaderboard image to container registry'
+      inputs:
+        command: buildAndPush
+        buildContext: $(Build.Repository.LocalPath)
+        repository: $(leaderboardRepository)
+        dockerfile: '$(Build.SourcesDirectory)/Tailspin.SpaceGame.LeaderboardContainer/Dockerfile'
+        containerRegistry: 'acr-connection'
+        tags: |
+          $(tag)
+
+    - publish: '$(Build.SourcesDirectory)/manifests'
+      artifact: manifests
+
+    - download: current
+      artifact: manifests
+
+    - task: KubernetesManifest@0
+      displayName: create imagePullSecret
+      inputs:
+        action: createSecret
+        secretName: $(imagePullSecret)
+        dockerRegistryEndpoint: 'acr-connection'
+        kubernetesServiceConnection: 'mossad-kube-connection'
+        namespace: 'webapp-dev'
+              
+    - task: KubernetesManifest@0
+      displayName: Deploy to k8s cluster
+      inputs:
+        action: deploy
+        kubernetesServiceConnection: 'mossad-kube-connection'
+        namespace: 'webapp-dev'
+        manifests: |
+          $(Pipeline.Workspace)/manifests/webapp/dev/*.yml
+        imagePullSecrets: |
+          $(imagePullSecret)
+        containers: |
+          $(RegistryName)/$(webRepository):$(tag)
+          $(RegistryName)/$(leaderboardRepository):$(tag)
+
+
+
+
+
+  # - job: "Build"
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #     - publish: '$(Build.SourcesDirectory)/manifests'
+  #       artifact: manifests
+
+  #     - download: current
+  #       artifact: manifests
       
-      - task: KubernetesManifest@0
-        displayName: Deploy to k8s cluster dev
-        inputs:
-          action: deploy
-          kubernetesServiceConnection: 'mossad-kube-connection'
-          namespace: 'graylog-dev'
-          manifests: |
-            $(Pipeline.Workspace)/manifests/graylog/dev/*.yml
-            # $(Pipeline.Workspace)/manifests/graylog/stage/*.yml
+  #     - task: KubernetesManifest@0
+  #       displayName: Deploy to k8s cluster dev
+  #       inputs:
+  #         action: deploy
+  #         kubernetesServiceConnection: 'mossad-kube-connection'
+  #         namespace: 'graylog-dev'
+  #         manifests: |
+  #           $(Pipeline.Workspace)/manifests/graylog/dev/*.yml
+  #           # $(Pipeline.Workspace)/manifests/graylog/stage/*.yml
 
 
-      - task: KubernetesManifest@0
-        displayName: Deploy to k8s cluster stage
-        inputs:
-          action: deploy
-          kubernetesServiceConnection: 'mossad-kube-connection'
-          namespace: 'graylog-stage'
-          manifests: |
-            # $(Pipeline.Workspace)/manifests/graylog/dev/*.yml
-            $(Pipeline.Workspace)/manifests/graylog/stage/*.yml
+  #     - task: KubernetesManifest@0
+  #       displayName: Deploy to k8s cluster stage
+  #       inputs:
+  #         action: deploy
+  #         kubernetesServiceConnection: 'mossad-kube-connection'
+  #         namespace: 'graylog-stage'
+  #         manifests: |
+  #           # $(Pipeline.Workspace)/manifests/graylog/dev/*.yml
+  #           $(Pipeline.Workspace)/manifests/graylog/stage/*.yml
 
-            # $(Pipeline.Workspace)/manifests/graylog-deploy.yml
-            # $(Pipeline.Workspace)/manifests/cronjob.yml
+  #           # $(Pipeline.Workspace)/manifests/graylog-deploy.yml
+  #           # $(Pipeline.Workspace)/manifests/cronjob.yml
   #           # $(System.DefaultWorkingDirectory)/sudoom.k8s_gray/manifests/*.yml
 
           # imagePullSecrets: |
