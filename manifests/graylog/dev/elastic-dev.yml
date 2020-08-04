@@ -6,22 +6,22 @@ metadata:
     service: es-deploy-dev
   namespace: graylog-dev
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
         service: es-deploy-dev
     spec:
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: service
-                operator: In
-                values:
-                - es-deploy-dev
-            topologyKey: "kubernetes.io/hostname"
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchExpressions:
+      #         - key: service
+      #           operator: In
+      #           values:
+      #           - es-deploy-dev
+      #       topologyKey: "kubernetes.io/hostname"
       initContainers:
       - name: init-sysctl
         image: busybox:1.30
