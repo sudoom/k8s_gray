@@ -9,23 +9,23 @@ stages:
   displayName: 'Build and Push'
   jobs:  
 
-  # - job: 'Create'
-  #   pool:
-  #     vmImage: 'ubuntu-18.04'
-  #   steps:
-  #     - task: AzureResourceManagerTemplateDeployment@3
-  #       displayName: 'Create resources'
-  #       inputs:
-  #         deploymentScope: 'Resource Group'
-  #         azureResourceManagerConnection: 'test-connection'
-  #         subscriptionId: '$(subscriptionId)'
-  #         action: 'Create Or Update Resource Group'
-  #         resourceGroupName: 'test'
-  #         location: 'East US'
-  #         templateLocation: 'Linked artifact'
-  #         csmFile: 'create.json'
-  #         overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
-  #         deploymentMode: 'Incremental'
+  - job: 'Create'
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Create resources'
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'test-connection'
+          subscriptionId: '$(subscriptionId)'
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: 'test'
+          location: 'East US'
+          templateLocation: 'Linked artifact'
+          csmFile: 'create.json'
+          overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
+          deploymentMode: 'Incremental'
 
   # - job: 'Create_namespaces'
   #   pool:
@@ -93,24 +93,24 @@ stages:
 
 
 
-  - job: "Build"
-    pool:
-      vmImage: 'ubuntu-18.04'
-    steps:
-      - publish: '$(Build.SourcesDirectory)/manifests'
-        artifact: manifests
+  # - job: "Build"
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #     - publish: '$(Build.SourcesDirectory)/manifests'
+  #       artifact: manifests
 
-      - download: current
-        artifact: manifests
+  #     - download: current
+  #       artifact: manifests
       
-      - task: KubernetesManifest@0
-        displayName: Deploy to k8s cluster
-        inputs:
-          action: deploy
-          kubernetesServiceConnection: 'mossad-kube-connection'
-          namespace: 'graylog-dev'
-          manifests: |
-            $(Pipeline.Workspace)/manifests/graylog/dev/*.yml
+  #     - task: KubernetesManifest@0
+  #       displayName: Deploy to k8s cluster
+  #       inputs:
+  #         action: deploy
+  #         kubernetesServiceConnection: 'mossad-kube-connection'
+  #         namespace: 'graylog-dev'
+  #         manifests: |
+  #           $(Pipeline.Workspace)/manifests/graylog/dev/*.yml
             # $(Pipeline.Workspace)/manifests/mongo-deploy.yml
             # $(Pipeline.Workspace)/manifests/graylog-deploy.yml
             # $(Pipeline.Workspace)/manifests/cronjob.yml
