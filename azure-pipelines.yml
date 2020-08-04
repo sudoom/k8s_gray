@@ -27,37 +27,37 @@ stages:
   #         overrideParameters: '-clientId "$(clientId)" -clientSecret "$(clientSecret)"'
   #         deploymentMode: 'Incremental'
 
-  - job: 'Create_namespaces'
-    pool:
-      vmImage: 'ubuntu-18.04'
-    steps:
-    - task: Kubernetes@1
-      displayName: 'kubectl create'            
-      inputs:            
-        kubernetesServiceEndpoint: 'mossad-kube-connection'            
-        command: create            
-        arguments: 'namespace graylog-stage' 
+  # - job: 'Create_namespaces'
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   steps:
+  #   - task: Kubernetes@1
+  #     displayName: 'kubectl create'            
+  #     inputs:            
+  #       kubernetesServiceEndpoint: 'mossad-kube-connection'            
+  #       command: create            
+  #       arguments: 'namespace graylog-stage' 
 
-    - task: Kubernetes@1
-      displayName: 'kubectl create'            
-      inputs:            
-        kubernetesServiceEndpoint: 'mossad-kube-connection'            
-        command: create            
-        arguments: 'namespace webapp-stage'  
+  #   - task: Kubernetes@1
+  #     displayName: 'kubectl create'            
+  #     inputs:            
+  #       kubernetesServiceEndpoint: 'mossad-kube-connection'            
+  #       command: create            
+  #       arguments: 'namespace webapp-stage'  
 
-    - task: Kubernetes@1
-      displayName: 'kubectl create'            
-      inputs:            
-        kubernetesServiceEndpoint: 'mossad-kube-connection'            
-        command: create            
-        arguments: 'namespace graylog-dev'     
+  #   - task: Kubernetes@1
+  #     displayName: 'kubectl create'            
+  #     inputs:            
+  #       kubernetesServiceEndpoint: 'mossad-kube-connection'            
+  #       command: create            
+  #       arguments: 'namespace graylog-dev'     
 
-    - task: Kubernetes@1
-      displayName: 'kubectl create'            
-      inputs:            
-        kubernetesServiceEndpoint: 'mossad-kube-connection'            
-        command: create            
-        arguments: 'namespace webapp-dev' 
+  #   - task: Kubernetes@1
+  #     displayName: 'kubectl create'            
+  #     inputs:            
+  #       kubernetesServiceEndpoint: 'mossad-kube-connection'            
+  #       command: create            
+  #       arguments: 'namespace webapp-dev' 
 
   # - job: 'Build'
   #   displayName: 'Build job'
