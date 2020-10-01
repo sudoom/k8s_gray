@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "LvPTk4mpSM5DeCkd95LzavXuBmawGa7IT0FeoUi8IQPVYqhQBa4cA8pCmfaqqfU4E3zGRCvThUvR6F0jF2l07A==",
+  "success": true,
+  "projectFilePath": "/home/ITRANSITION.CORP/v.dedyulya/Repos/k8s_gray/Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj",
+  "expectedPackageFiles": [
+    "/home/ITRANSITION.CORP/v.dedyulya/.nuget/packages/microsoft.visualstudio.azure.containers.tools.targets/1.9.10/microsoft.visualstudio.azure.containers.tools.targets.1.9.10.nupkg.sha512",
+    "/home/ITRANSITION.CORP/v.dedyulya/.nuget/packages/microsoft.visualstudio.azure.kubernetes.tools.targets/1.0.0/microsoft.visualstudio.azure.kubernetes.tools.targets.1.0.0.nupkg.sha512",
+    "/home/ITRANSITION.CORP/v.dedyulya/.nuget/packages/newtonsoft.json/12.0.1/newtonsoft.json.12.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

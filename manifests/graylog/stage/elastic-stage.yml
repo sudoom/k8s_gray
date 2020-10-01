@@ -1,26 +1,27 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: es-deploy
+  name: es-deploy-stage
   labels:
-    service: es-deploy
+    service: es-deploy-stage
+  namespace: graylog-stage
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
-        service: es-deploy
+        service: es-deploy-stage
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: service
-                operator: In
-                values:
-                - es-deploy
-            topologyKey: "kubernetes.io/hostname"
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchExpressions:
+      #         - key: service
+      #           operator: In
+      #           values:
+      #           - es-deploy-stage
+      #       topologyKey: "kubernetes.io/hostname"
       initContainers:
       - name: init-sysctl
         image: busybox:1.30
@@ -38,21 +39,24 @@ spec:
         ports:
         - containerPort: 9200
         - containerPort: 9300
+      nodeSelector:
+        agentpool: graylog
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: es6
+  name: es6-stage
+  namespace: graylog-stage
 spec:
   type: NodePort
   selector:
-    service: es-deploy
+    service: es-deploy-stage
   ports:
   - name: "9200"
     port: 9200
     targetPort: 9200
-    nodePort: 30001
+    nodePort: 30101
   - name: "9300"
     port: 9300
     targetPort: 9300
-    nodePort: 30002
+    nodePort: 30102

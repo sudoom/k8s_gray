@@ -1,0 +1,79 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/ITRANSITION.CORP/v.dedyulya/Repos/k8s_gray/Tailspin.SpaceGame.LeaderboardContainer/Tailspin.SpaceGame.LeaderboardContainer.csproj": {}
+  },
+  "projects": {
+    "/home/ITRANSITION.CORP/v.dedyulya/Repos/k8s_gray/Tailspin.SpaceGame.LeaderboardContainer/Tailspin.SpaceGame.LeaderboardContainer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/ITRANSITION.CORP/v.dedyulya/Repos/k8s_gray/Tailspin.SpaceGame.LeaderboardContainer/Tailspin.SpaceGame.LeaderboardContainer.csproj",
+        "projectName": "Tailspin.SpaceGame.LeaderboardContainer",
+        "projectPath": "/home/ITRANSITION.CORP/v.dedyulya/Repos/k8s_gray/Tailspin.SpaceGame.LeaderboardContainer/Tailspin.SpaceGame.LeaderboardContainer.csproj",
+        "packagesPath": "/home/ITRANSITION.CORP/v.dedyulya/.nuget/packages/",
+        "outputPath": "/home/ITRANSITION.CORP/v.dedyulya/Repos/k8s_gray/Tailspin.SpaceGame.LeaderboardContainer/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/ITRANSITION.CORP/v.dedyulya/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.9.10, )"
+            },
+            "Microsoft.VisualStudio.Azure.Kubernetes.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
