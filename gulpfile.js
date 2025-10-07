@@ -1,8 +1,8 @@
-﻿/// <binding Clean='clean' />
+﻿﻿/// <binding Clean='clean' />
 "use strict";
 
 const gulp = require("gulp"),
-      rimraf = require("rimraf"),
+      { rimraf } = require("rimraf"),
       concat = require("gulp-concat"),
       cleanCSS = require("gulp-clean-css"),
       uglify = require("gulp-uglify");
@@ -18,8 +18,8 @@ paths.minCss = paths.webroot + "css/**/*.min.css";
 paths.concatJsDest = paths.webroot + "js/site.min.js";
 paths.concatCssDest = paths.webroot + "css/site.min.css";
 
-gulp.task("clean:js", done => rimraf(paths.concatJsDest, done));
-gulp.task("clean:css", done => rimraf(paths.concatCssDest, done));
+gulp.task("clean:js", () => rimraf(paths.concatJsDest));
+gulp.task("clean:css", () => rimraf(paths.concatCssDest));
 gulp.task("clean", gulp.series(["clean:js", "clean:css"]));
 
 gulp.task("min:js", () => {
