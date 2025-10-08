@@ -1,13 +1,12 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
-WORKDIR /src
+WORKDIR /src/Tailspin.SpaceGame.LeaderboardContainer
 
 # Copy csproj and restore as distinct layers
-COPY ["Tailspin.SpaceGame.LeaderboardContainer/Tailspin.SpaceGame.LeaderboardContainer.csproj", "Tailspin.SpaceGame.LeaderboardContainer/"]
-RUN dotnet restore "Tailspin.SpaceGame.LeaderboardContainer/Tailspin.SpaceGame.LeaderboardContainer.csproj"
+COPY Tailspin.SpaceGame.LeaderboardContainer/Tailspin.SpaceGame.LeaderboardContainer.csproj .
+RUN dotnet restore "Tailspin.SpaceGame.LeaderboardContainer.csproj"
 
 # Copy everything else and build
-COPY . .
-WORKDIR "/src/Tailspin.SpaceGame.LeaderboardContainer"
+COPY Tailspin.SpaceGame.LeaderboardContainer/. .
 RUN dotnet publish "Tailspin.SpaceGame.LeaderboardContainer.csproj" -c Release -o /app/publish
 
 # Final stage
